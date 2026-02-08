@@ -1,0 +1,68 @@
+
+> web@0.1.0 lint
+> eslint .
+
+
+/home/daniel/quitlab/web/prisma/config.ts
+  3:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+/home/daniel/quitlab/web/src/app/community/page.tsx
+  93:9  warning  'handleBlock' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel/quitlab/web/src/app/tools/page.tsx
+  3:31  warning  'useCallback' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 3 problems (0 errors, 3 warnings)
+
+
+> web@0.1.0 test
+> vitest run
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/home/daniel/quitlab/web[39m
+
+ [32m✓[39m src/app/__tests__/smoke.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 2[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 11:09:17
+[2m   Duration [22m 541ms[2m (transform 25ms, setup 55ms, import 13ms, tests 2ms, environment 368ms)[22m
+
+
+> web@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.6s
+  Running TypeScript ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/14) ...
+  Generating static pages using 15 workers (3/14) 
+  Generating static pages using 15 workers (6/14) 
+  Generating static pages using 15 workers (10/14) 
+✓ Generating static pages using 15 workers (14/14) in 204.6ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/checkins
+├ ƒ /api/community/block
+├ ƒ /api/community/report
+├ ƒ /api/quit-plan
+├ ○ /checkin
+├ ○ /community
+├ ○ /dashboard
+├ ○ /onboarding
+├ ○ /safety
+└ ○ /tools
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+COMPLETION ORACLE PASSED.
