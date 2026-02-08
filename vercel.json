@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "buildCommand": "cd web && prisma generate && next build",
+  "installCommand": "cd web && npm install",
+  "framework": "nextjs",
+  "outputDirectory": "web/.next"
+}
