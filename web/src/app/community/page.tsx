@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
+import { isDemoMode, DEMO_USER } from '@/lib/demo';
 
 const rooms = [
   { id: 'nicotine', name: 'Nicotine/Cigarettes', icon: '🚬' },
@@ -42,6 +43,11 @@ export default function CommunityPage() {
   const [posts, setPosts] = useState(mockPosts);
   const [reporting, setReporting] = useState<string | null>(null);
   const [reportReason, setReportReason] = useState('');
+  const [demo, setDemo] = useState(false);
+
+  useEffect(() => {
+    setDemo(isDemoMode());
+  }, []);
 
   if (status === 'loading') {
     return (
@@ -51,7 +57,7 @@ export default function CommunityPage() {
     );
   }
 
-  if (!session) {
+  if (!session && !demo) {
     redirect('/');
   }
 
@@ -59,7 +65,7 @@ export default function CommunityPage() {
     if (!newPost.trim()) return;
     const post = {
       id: Date.now().toString(),
-      author: session.user?.name || 'Anonymous',
+      author: demo ? DEMO_USER.name : (session?.user?.name || 'Anonymous'),
       content: newPost,
       createdAt: 'Just now',
       reactions: { support: 0, celebrate: 0 },

@@ -1,7 +1,9 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
+import { isDemoMode } from '@/lib/demo';
 
 const crisisResources = [
   {
@@ -50,6 +52,11 @@ const warningSigns = [
 
 export default function SafetyPage() {
   const { data: session, status } = useSession();
+  const [demo, setDemo] = useState(false);
+
+  useEffect(() => {
+    setDemo(isDemoMode());
+  }, []);
 
   if (status === 'loading') {
     return (
@@ -59,7 +66,7 @@ export default function SafetyPage() {
     );
   }
 
-  if (!session) {
+  if (!session && !demo) {
     redirect('/');
   }
 

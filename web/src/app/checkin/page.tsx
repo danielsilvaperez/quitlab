@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
+import { isDemoMode } from '@/lib/demo';
 
 const commonTriggers = [
   'Stress',
@@ -27,6 +28,11 @@ export default function CheckInPage() {
   const [sleep, setSleep] = useState(7);
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
+  const [demo, setDemo] = useState(false);
+
+  useEffect(() => {
+    setDemo(isDemoMode());
+  }, []);
 
   if (status === 'loading') {
     return (
@@ -36,7 +42,7 @@ export default function CheckInPage() {
     );
   }
 
-  if (!session) {
+  if (!session && !demo) {
     redirect('/');
   }
 
@@ -50,6 +56,12 @@ export default function CheckInPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (demo) {
+      // In demo mode, just simulate success
+      setSubmitted(true);
+      return;
+    }
 
     const response = await fetch('/api/checkins', {
       method: 'POST',

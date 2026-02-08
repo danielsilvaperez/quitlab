@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
+import { isDemoMode } from '@/lib/demo';
 
 // Urge Surfing Timer Component
 function UrgeTimer() {
@@ -248,6 +249,11 @@ function ReasonsList() {
 
 export default function ToolsPage() {
   const { data: session, status } = useSession();
+  const [demo, setDemo] = useState(false);
+
+  useEffect(() => {
+    setDemo(isDemoMode());
+  }, []);
 
   if (status === 'loading') {
     return (
@@ -257,7 +263,7 @@ export default function ToolsPage() {
     );
   }
 
-  if (!session) {
+  if (!session && !demo) {
     redirect('/');
   }
 

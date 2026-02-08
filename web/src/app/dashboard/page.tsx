@@ -2,6 +2,8 @@
 
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { isDemoMode, clearDemoMode, DEMO_USER } from '@/lib/demo';
 
 // Mock data for demo
 const mockCheckIns = [
@@ -14,6 +16,11 @@ const mockCheckIns = [
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
+  const [demo, setDemo] = useState(false);
+
+  useEffect(() => {
+    setDemo(isDemoMode());
+  }, []);
 
   if (status === 'loading') {
     return (
@@ -23,9 +30,12 @@ export default function DashboardPage() {
     );
   }
 
-  if (!session) {
+  if (!session && !demo) {
     redirect('/');
   }
+
+  const userName = demo ? DEMO_USER.name : session?.user?.name;
+  const isDemo = demo;
 
   const streak = 3; // Mock streak
   const daysClean = 3;
@@ -45,7 +55,25 @@ export default function DashboardPage() {
             <a href="/community" className="text-zinc-600 hover:text-zinc-900">Community</a>
             <a href="/safety" className="text-zinc-600 hover:text-zinc-900">Safety</a>
           </div>
-          <span className="text-sm text-zinc-600">{session.user?.name}</span>
+          <div className="flex items-center gap-2">
+            {isDemo && (
+              <span className="rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-800">
+                DEMO MODE
+              </span>
+            )}
+            <span className="text-sm text-zinc-600">{userName}</span>
+            {isDemo && (
+              <button
+                onClick={() => {
+                  clearDemoMode();
+                  window.location.href = '/';
+                }}
+                className="text-xs text-zinc-400 hover:text-zinc-600"
+              >
+                Exit
+              </button>
+            )}
+          </div>
         </div>
       </nav>
 

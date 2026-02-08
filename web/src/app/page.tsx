@@ -1,13 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
+import { setDemoMode, isDemoMode } from '@/lib/demo';
 
 export default function Home() {
   const { data: session, status } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [demo, setDemo] = useState(false);
+
+  useEffect(() => {
+    setDemo(isDemoMode());
+  }, []);
 
   if (status === 'loading') {
     return (
@@ -17,7 +23,7 @@ export default function Home() {
     );
   }
 
-  if (session) {
+  if (session || demo) {
     redirect('/dashboard');
   }
 
@@ -28,6 +34,12 @@ export default function Home() {
       password,
       callbackUrl: '/dashboard',
     });
+  };
+
+  const startDemo = () => {
+    setDemoMode(true);
+    setDemo(true);
+    redirect('/dashboard');
   };
 
   return (
@@ -84,8 +96,20 @@ export default function Home() {
           </button>
         </form>
 
+        <div className="mt-6 border-t border-zinc-200 pt-4">
+          <button
+            onClick={startDemo}
+            className="w-full rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+          >
+            🎮 View Demo (No Login Required)
+          </button>
+          <p className="mt-2 text-center text-xs text-zinc-400">
+            Preview the app with sample data
+          </p>
+        </div>
+
         <p className="mt-4 text-center text-sm text-zinc-500">
-          Demo: Enter any email and password to create an account
+          Or sign in with any email and password to create an account
         </p>
       </div>
     </div>
